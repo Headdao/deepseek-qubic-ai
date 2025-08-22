@@ -17,6 +17,8 @@ class AppConfig:
     
     # 📊 API 配置
     API_PREFIX = '/api'
+    # ⏱️ 是否提供毫秒級 Duration（新增欄位：duration_ms、duration_s）
+    USE_FLOAT_DURATION = True
     
     # ⏱️ 更新間隔 (秒)
     UPDATE_INTERVALS = {

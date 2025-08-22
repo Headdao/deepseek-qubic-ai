@@ -34,6 +34,7 @@
           "analysisTime": "Analysis Time",
           "duration": "Duration"
         },
+        "summary": "Analysis Summary",
         "fallback": {
           "summaryText": "Professional analysis of current Qubic network state completed",
           "unavailable": "Analysis results unavailable",

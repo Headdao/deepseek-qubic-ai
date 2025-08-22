@@ -9,14 +9,15 @@ QDashboard AI API 為 Qubic 網路監控提供智能分析功能，基於 DeepSe
 ### 啟動服務
 
 ```bash
-# 激活虛擬環境
-source venv/bin/activate
+# 激活虛擬環境（統一使用 .venv）
+source .venv/bin/activate
 
-# 啟動 Flask 應用程式
-python app.py
+# 啟動 QDashboard（真實數據 + AI）
+python real_qubic_app.py
 ```
 
-服務將在 `http://localhost:8000` 啟動。
+服務連接埠由 `app_config.py` 統一管理（預設 `PORT=3000`）。
+預設網址：`http://127.0.0.1:3000`。
 
 ## 📡 API 端點
 
@@ -27,22 +28,18 @@ python app.py
 檢查 AI 系統狀態和就緒情況。
 
 ```bash
-curl http://localhost:8000/api/ai/status
+curl http://127.0.0.1:3000/api/ai/status
 ```
 
 **回應範例**:
 ```json
 {
-  "ai_engine": {
-    "status": "ready",
-    "model_loaded": true,
-    "device": "cpu"
-  },
-  "qubic_client": {
-    "status": "connected",
-    "connected": true
-  },
-  "overall_status": "ready"
+  "status": "ok",
+  "ai_available": true,
+  "ai_engine_loaded": true,
+  "model_status": "ready",
+  "qubic_integration": true,
+  "timestamp": 1755853864
 }
 ```
 
@@ -52,10 +49,13 @@ curl http://localhost:8000/api/ai/status
 
 使用 AI 分析 Qubic 網路數據。
 
+說明：若不提供 `data`，系統將自動以 `/api/tick` 與 `/api/stats` 的即時資料進行分析。
+
 ```bash
-curl -X POST http://localhost:8000/api/ai/analyze \
+curl -X POST http://127.0.0.1:3000/api/ai/analyze \
   -H "Content-Type: application/json" \
   -d '{
+    "language": "zh-tw",
     "data": {
       "tick": 15423890,
       "duration": 1.2,
@@ -90,9 +90,10 @@ curl -X POST http://localhost:8000/api/ai/analyze \
 使用自然語言詢問 Qubic 網路相關問題。
 
 ```bash
-curl -X POST http://localhost:8000/api/ai/query \
+curl -X POST http://127.0.0.1:3000/api/ai/query \
   -H "Content-Type: application/json" \
   -d '{
+    "language": "en",
     "question": "What is the current network status?"
   }'
 ```
@@ -107,40 +108,13 @@ curl -X POST http://localhost:8000/api/ai/query \
 }
 ```
 
-### 4. 網路洞察
+### 4. 網路洞察（TBD）
 
-**GET** `/api/ai/insights`
+此端點尚未實作，請改用 `POST /api/ai/analyze` 並解析回傳的 `insights` 與 `recommendations` 欄位。
 
-獲取當前網路的 AI 洞察和建議。
+### 5. 健康檢查（TBD）
 
-```bash
-curl http://localhost:8000/api/ai/insights
-```
-
-**回應範例**:
-```json
-{
-  "success": true,
-  "analysis": "網路整體狀況分析...",
-  "insights": ["洞察1", "洞察2"],
-  "recommendations": ["建議1", "建議2"],
-  "network_snapshot": {
-    "tick": 31519544,
-    "duration": 1,
-    "health_status": "健康"
-  }
-}
-```
-
-### 5. 健康檢查
-
-**GET** `/api/ai/health`
-
-簡單的 AI 服務健康檢查。
-
-```bash
-curl http://localhost:8000/api/ai/health
-```
+建議以 `GET /api/ai/status` 作為健康檢查指標（含 `model_status` 與 `qubic_integration`）。
 
 ## 🛠️ 使用範例
 
@@ -151,7 +125,7 @@ import requests
 import json
 
 # 基礎配置
-BASE_URL = "http://localhost:8000/api/ai"
+BASE_URL = "http://127.0.0.1:3000/api/ai"
 
 def check_ai_status():
     """檢查 AI 狀態"""
@@ -204,7 +178,7 @@ if __name__ == "__main__":
 
 ```javascript
 class QubicAIClient {
-    constructor(baseUrl = 'http://localhost:8000/api/ai') {
+    constructor(baseUrl = 'http://127.0.0.1:3000/api/ai') {
         this.baseUrl = baseUrl;
     }
     
@@ -213,24 +187,24 @@ class QubicAIClient {
         return await response.json();
     }
     
-    async analyzeData(data) {
+    async analyzeData(data, language = 'zh-tw') {
         const response = await fetch(`${this.baseUrl}/analyze`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data })
+            body: JSON.stringify({ language, data })
         });
         return await response.json();
     }
     
-    async askQuestion(question) {
+    async askQuestion(question, language = 'en') {
         const response = await fetch(`${this.baseUrl}/query`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ question })
+            body: JSON.stringify({ language, question })
         });
         return await response.json();
     }

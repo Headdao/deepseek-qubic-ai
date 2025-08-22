@@ -43,6 +43,8 @@ class RealQubicDataProvider:
         self.cache_duration = 3  # 3秒緩存
         self.connection_status = "初始化中"
         self.ai_engine = None
+        # 高精度時間紀錄（毫秒級計算用）
+        self._last_tick_ns = None
         
         if QUBIC_AVAILABLE:
             self._initialize_client()
@@ -127,12 +129,16 @@ class RealQubicDataProvider:
                 except:
                     status_info = {}
                 
-                # 計算持續時間（基於真實數據）
-                duration = self._calculate_duration(tick_number, status_info)
+                # 計算持續時間（毫秒級 + 相容秒級）
+                duration_info = self._calculate_duration(tick_number, status_info)
                 
                 data = {
                     "tick": tick_number,
-                    "duration": duration,
+                    # 相容欄位（整數秒）
+                    "duration": duration_info.get("duration", 0),
+                    # 新增毫秒級/浮點秒欄位
+                    "duration_ms": duration_info.get("duration_ms", 0),
+                    "duration_s": duration_info.get("duration_s", 0.0),
                     "epoch": epoch,
                     "timestamp": int(current_time),
                     "health": {
@@ -144,7 +150,10 @@ class RealQubicDataProvider:
                 
                 self.last_tick_data = data
                 self.last_fetch_time = current_time
-                print(f"✅ 成功獲取真實數據: Tick {data['tick']}, Duration {data['duration']}s")
+                print(
+                    f"✅ 成功獲取真實數據: Tick {data['tick']}, "
+                    f"Duration {data.get('duration_s', 0.0):.2f}s (int={data.get('duration', 0)}s)"
+                )
                 return data
                 
             except Exception as e:
@@ -164,28 +173,49 @@ class RealQubicDataProvider:
         }
     
     def _calculate_duration(self, tick_number, status_info):
-        """計算 tick 持續時間"""
+        """計算 tick 持續時間，提供毫秒級與秒級（相容）。"""
         try:
-            # 嘗試從 status_info 中獲取時間信息
+            delta_ms = None
+            # 1) 優先使用 RPC 提供的時間戳
             if isinstance(status_info, dict):
-                if 'duration' in status_info:
-                    return status_info['duration']
+                if 'timestamp_ms' in status_info and 'previous_timestamp_ms' in status_info:
+                    delta_ms = max(0, int(status_info['timestamp_ms']) - int(status_info['previous_timestamp_ms']))
                 elif 'timestamp' in status_info and 'previous_timestamp' in status_info:
-                    return status_info['timestamp'] - status_info['previous_timestamp']
-            
-            # 如果沒有確切的時間信息，基於 tick 變化估算
-            if hasattr(self, 'last_tick_number') and self.last_tick_number:
-                if tick_number > self.last_tick_number:
-                    # Tick 在增長，網路正常
-                    return 1  # 估計1秒
-                else:
-                    # Tick 停滯，可能有問題
-                    return 5
-            
+                    # 秒 → 毫秒
+                    delta_ms = max(0, int(status_info['timestamp']) - int(status_info['previous_timestamp'])) * 1000
+                elif 'duration' in status_info:
+                    # 僅有整數秒
+                    delta_ms = max(0, int(status_info['duration']) * 1000)
+
+            # 2) 回退：使用高精度計時器估算（僅在 tick 前進時）
+            if delta_ms is None:
+                now_ns = time.perf_counter_ns()
+                if self._last_tick_ns is not None and hasattr(self, 'last_tick_number') and self.last_tick_number is not None:
+                    if tick_number > self.last_tick_number:
+                        delta_ms = max(0, (now_ns - self._last_tick_ns) // 1_000_000)
+                self._last_tick_ns = now_ns
+
+            # 記錄最近 tick
             self.last_tick_number = tick_number
-            return 1  # 默認1秒
-        except:
-            return 0
+
+            # 3) 統一輸出
+            if delta_ms is None:
+                delta_ms = 1000  # 最末回退 1 秒
+
+            duration_s = delta_ms / 1000.0
+            duration_int = 0 if delta_ms == 0 else int((delta_ms + 999) // 1000)  # ceil
+
+            return {
+                'duration_ms': delta_ms,
+                'duration_s': duration_s,
+                'duration': duration_int
+            }
+        except Exception:
+            return {
+                'duration_ms': 0,
+                'duration_s': 0.0,
+                'duration': 0
+            }
     
     def _determine_health_status(self, tick_number, status):
         """根據網路狀態判斷健康狀況"""
@@ -348,6 +378,15 @@ def ai_analyze():
             data_to_analyze = data_provider.get_current_tick_data()
         
         if ai_engine and data_to_analyze.get('data_source') != 'error':
+            # 數據健全性：若 duration 缺失或為 0，嘗試以最新 tick 值補充；最後保底為 1
+            try:
+                duration_val = data_to_analyze.get('duration')
+                if duration_val in (None, 0):
+                    fresh = data_provider.get_current_tick_data()
+                    fresh_duration = fresh.get('duration')
+                    data_to_analyze['duration'] = fresh_duration if fresh_duration not in (None, 0) else 1
+            except Exception:
+                data_to_analyze['duration'] = data_to_analyze.get('duration') or 1
             # 使用真正的 AI 引擎進行分析
             print(f"🧠 開始 AI 分析... (語言: {language})")
             start_time = time.time()

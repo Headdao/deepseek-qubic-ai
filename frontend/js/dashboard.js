@@ -195,10 +195,19 @@ class QDashboard {
         if (currentEpoch) currentEpoch.textContent = data.epoch || '--';
         
         const tickDuration = document.getElementById('tick-duration');
-        if (tickDuration) tickDuration.textContent = `${data.duration || '--'}`;
+        if (tickDuration) {
+            if (typeof data.duration_s === 'number' && !Number.isNaN(data.duration_s)) {
+                tickDuration.textContent = `${data.duration_s.toFixed(2)}`;
+            } else {
+                tickDuration.textContent = `${data.duration || '--'}`;
+            }
+        }
         
         const networkHealth = document.getElementById('network-health');
-        if (networkHealth) networkHealth.textContent = data.health?.overall || '--';
+        if (networkHealth) {
+            const healthText = this.translateStatusText(data.health?.overall || '--');
+            networkHealth.textContent = healthText;
+        }
         
         // 更新 Epoch 進度
         this.updateEpochProgress(data);
@@ -384,17 +393,20 @@ class QDashboard {
         if (!health) return;
         
         // 更新健康指標徽章
-        this.updateHealthBadge('health-overall', health.overall);
-        this.updateHealthBadge('health-tick', health.tick_status);
-        this.updateHealthBadge('health-epoch', health.epoch_status);
-        this.updateHealthBadge('health-duration', health.duration_status);
+        // 修正目標元素 ID 與頁面一致
+        this.updateHealthBadge('overall-health-badge', health.overall);
+        this.updateHealthBadge('tick-health-badge', health.tick_status);
+        this.updateHealthBadge('epoch-health-badge', health.epoch_status);
+        this.updateHealthBadge('duration-health-badge', health.duration_status);
     }
     
     updateHealthBadge(elementId, status) {
         const element = document.getElementById(elementId);
         if (!element) return;
         
-        element.textContent = status || '--';
+        // 根據目前語言翻譯顯示文字（資料來源可能為中文）
+        const translated = this.translateStatusText(status || '--');
+        element.textContent = translated;
         
         // 移除所有狀態類別
         element.className = 'badge';
@@ -419,33 +431,73 @@ class QDashboard {
             case '離線':
                 element.classList.add('bg-secondary');
                 break;
+            case 'Healthy':
+            case 'Normal':
+                element.classList.add('bg-success');
+                break;
+            case 'Slightly Slow':
+                element.classList.add('bg-warning');
+                break;
+            case 'Slow':
+            case 'Abnormal':
+            case 'Error':
+                element.classList.add('bg-danger');
+                break;
+            case 'Offline':
+                element.classList.add('bg-secondary');
+                break;
             default:
                 element.classList.add('bg-secondary');
         }
+    }
+
+    // 將後端狀態字詞（預設中文）依目前語言轉換顯示
+    translateStatusText(status) {
+        const currentLang = (window.languageSwitcher && typeof window.languageSwitcher.getCurrentLanguage === 'function')
+            ? window.languageSwitcher.getCurrentLanguage()
+            : 'zh-tw';
+        if (currentLang !== 'en') return status; // 中文直接顯示
+        const map = {
+            '健康': 'Healthy',
+            '正常': 'Normal',
+            '異常': 'Abnormal',
+            '錯誤': 'Error',
+            '停滯': 'Stalled',
+            '稍慢': 'Slightly Slow',
+            '緩慢': 'Slow',
+            '離線': 'Offline'
+        };
+        return map[status] || status;
     }
     
     updateConnectionStatus(isConnected, status = null) {
         const statusElement = document.getElementById('connection-status');
         if (statusElement) {
+            const currentLang = (window.languageSwitcher && typeof window.languageSwitcher.getCurrentLanguage === 'function')
+                ? window.languageSwitcher.getCurrentLanguage()
+                : 'zh-tw';
+            const t = (zh, en) => (currentLang === 'en' ? en : zh);
             if (isConnected) {
                 if (status === '真實數據') {
-                    statusElement.textContent = '🌐 真實數據';
+                    statusElement.textContent = t('🌐 真實數據', '🌐 Real Data');
                     statusElement.className = 'badge bg-success';
                     this.hideApiStatusAlert(); // 隱藏演示模式警告
                 } else if (status === '演示模式') {
-                    statusElement.textContent = '🎭 演示模式';
+                    statusElement.textContent = t('🎭 演示模式', '🎭 Demo Mode');
                     statusElement.className = 'badge bg-warning';
-                    this.showApiStatusAlert('演示模式', '由於 CORS 限制，此版本使用動態模擬數據。如需真實數據，請使用本地版本或部署後端 API。');
+                    this.showApiStatusAlert(t('演示模式', 'Demo Mode'), t('由於 CORS 限制，此版本使用動態模擬數據。如需真實數據，請使用本地版本或部署後端 API。', 'Due to CORS limitations, this build uses mock data. Use local backend or deploy API for real data.'));
                 } else if (status === '連線中') {
-                    statusElement.textContent = '🔗 連線中';
+                    statusElement.textContent = t('🔗 連線中', '🔗 Connecting');
                     statusElement.className = 'badge bg-info';
                 } else {
-                    statusElement.textContent = status || '🔗 已連線';
+                    statusElement.textContent = status ? (currentLang === 'en' ? status : status) : t('🔗 已連線', '🔗 Connected');
                     statusElement.className = 'badge bg-success';
                     this.hideApiStatusAlert(); // 隱藏演示模式警告
                 }
             } else {
-                statusElement.textContent = status === '連線失敗' ? '⚠️ 連線失敗' : '❌ 離線';
+                statusElement.textContent = (status === '連線失敗')
+                    ? t('⚠️ 連線失敗', '⚠️ Connection Failed')
+                    : t('❌ 離線', '❌ Offline');
                 statusElement.className = 'badge bg-danger';
             }
         }

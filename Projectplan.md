@@ -85,5 +85,27 @@ git log --oneline -10
 ---
 
 ## 審查（Review）
+實測時間：2025-08-22 16:40 CST（本機 macOS，瀏覽器 Safari/Chrome）
 
-*此區段將在完成所有任務後更新*
+環境與依賴：
+- 後端埠口：`127.0.0.1:3000`（統一由 `app_config.py` 管理）
+- 已安裝：`qubipy==0.4.0`、`torch>=2.4,<2.6`、`transformers>=4.44,<4.57`、`accelerate`、`safetensors`、`tokenizers`、`huggingface_hub`
+
+後端與 API：
+- /api/status 200：`qubic_available=true`、`connection_status=已連線`
+- /api/tick 200：`tick≈31,591,142`、`duration=1`、`epoch=175`、`health=健康`
+- /api/stats 200：`epochTickQuality≈92.3%`、`currentTick`/`ticksInCurrentEpoch` 正常
+- /api/ai/status 200：`ai_available=true`（模型依賴就緒；本地模型需另行下載才能啟用完整推理）
+- /api/ai/analyze 200：可回應，基於當前數據輸出分析（若未下載本地模型，內容為備援路徑產生）
+
+前端（待人工視覺確認）：
+- 英文語系：點右上語言下拉選單選「English」，預期所有帶 `data-i18n` 的標題與按鈕文字切換（如 AI Analysis、Start Analysis 等）。
+- Epoch 進度：依 /api/stats 值，進度條應顯示約 `92.3%`，`Initial Tick`/`Current Tick`/`Remaining Ticks`/`Estimated Time` 會動態更新。
+
+注意與後續建議：
+- 若要啟用真正的 DeepSeek 本地推理，需下載模型至 `backend/ai/models/deepseek/`（含 `model.safetensors`）；可使用 `scripts/download_deepseek_optimized.py`。
+- 已確保 `.venv/` 與模型大檔不納入 Git，遠端倉庫已以本地乾淨快照重置。
+
+測試範圍：
+- 覆蓋：後端啟動、核心 API（tick/stats/status）、AI 狀態與分析端點、翻譯檔讀取。
+- 未覆蓋：實際瀏覽器中所有文案的逐項檢視（請於頁面手動切到 English 確認）。
