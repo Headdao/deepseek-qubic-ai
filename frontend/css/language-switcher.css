@@ -1,0 +1,90 @@
+/**
+ * 🌐 語言切換器樣式 - 固定在 Header 右側
+ */
+
+.language-switcher {
+    position: relative;
+    display: inline-block;
+}
+
+.language-switcher button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 90px;
+    justify-content: center;
+}
+
+.language-switcher button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.language-switcher button:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.language-switcher button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.language-switcher .globe-icon {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* Header 右側控件組樣式 */
+.navbar .d-flex.align-items-center {
+    flex-wrap: nowrap;
+}
+
+/* 確保在小螢幕上語言切換器不會被擠壓 */
+@media (max-width: 768px) {
+    .language-switcher button {
+        padding: 6px 10px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+    
+    .language-switcher .fas.fa-globe {
+        font-size: 14px;
+    }
+    
+    .navbar .d-flex.align-items-center {
+        gap: 0.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .language-switcher button {
+        padding: 4px 8px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+    
+    .language-switcher button span {
+        display: none;
+    }
+    
+    .language-switcher .fas.fa-globe {
+        font-size: 16px;
+        margin: 0;
+    }
+}

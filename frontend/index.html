@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QDashboard_Lite - Qubic 網路監控</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4285f4">
+    <meta name="color-scheme" content="light dark">
+    
+    <!-- iOS PWA 支援 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="QDashboard_Lite">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-dark" style="background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1" style="font-weight: 500;">
+                <i class="bi bi-graph-up"></i> QDashboard_Lite
+            </span>
+            <span class="navbar-text">
+                <span id="connection-status" class="badge bg-success">🔗 連線中</span>
+            </span>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <div class="container-fluid py-3">
+        <!-- 網路狀態摘要 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-speedometer2"></i> Qubic 網路狀態
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 col-md-3">
+                                <div class="metric-card">
+                                    <div class="metric-value" id="current-tick">--</div>
+                                    <div class="metric-label">當前 Tick</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="metric-card">
+                                    <div class="metric-value" id="current-epoch">--</div>
+                                    <div class="metric-label">當前 Epoch</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="metric-card">
+                                    <div class="metric-value" id="tick-duration">--</div>
+                                    <div class="metric-label">Tick 持續時間 (秒)</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="metric-card">
+                                    <div class="metric-value" id="network-health">--</div>
+                                    <div class="metric-label">網路健康</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 網路統計數據區塊 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h4 class="section-title">
+                    <i class="bi bi-bar-chart"></i> 網路統計數據
+                </h4>
+            </div>
+        </div>
+
+        <!-- 核心網路指標 -->
+        <div class="row mb-4">
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="stat-value" id="active-addresses">--</div>
+                        <div class="stat-label">活躍地址數</div>
+                        <div class="stat-change" id="active-addresses-change">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="stat-value" id="market-cap">--</div>
+                        <div class="stat-label">市值 (USD)</div>
+                        <div class="stat-change" id="market-cap-change">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div class="stat-value" id="qubic-price">--</div>
+                        <div class="stat-label">QU 價格 (USD) - 9位精度</div>
+                        <div class="stat-change" id="price-change">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <div class="card stat-card">
+                    <div class="card-body text-center">
+                        <div class="stat-icon">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <div class="stat-value" id="epoch-quality">--</div>
+                        <div class="stat-label">Epoch 品質</div>
+                        <div class="stat-change" id="quality-change">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 經濟指標 -->
+        <div class="row mb-4">
+            <div class="col-12 col-lg-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-coin"></i> 供應量統計
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="supply-metric">
+                                    <div class="supply-value" id="circulating-supply">--</div>
+                                    <div class="supply-label">流通供應量</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="supply-metric">
+                                    <div class="supply-value" id="burned-qus">--</div>
+                                    <div class="supply-label">已燒毀 QUs</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-graph-up-arrow"></i> 價格趨勢
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="priceChart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心技術指標 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h4 class="section-title">
+                    <i class="bi bi-cpu"></i> 核心技術指標
+                </h4>
+            </div>
+        </div>
+
+        <!-- 四大核心指標圖表 -->
+        <div class="row">
+            <!-- Tick 趨勢圖 -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-activity"></i> Tick 增長趨勢
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="tickChart" height="200"></canvas>
+                        <div class="chart-info mt-2">
+                            <small class="text-muted">
+                                <strong>說明:</strong> 穩定上升表示網路正常運行，停滯或下降可能表示共識異常。
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duration 變化圖 -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-clock"></i> Tick 持續時間變化
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="durationChart" height="200"></canvas>
+                        <div class="chart-info mt-2">
+                            <small class="text-muted">
+                                <strong>說明:</strong> 0-2秒為正常範圍，0秒極快，1秒快速，2秒正常，3秒以上需注意。
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Epoch 進度條 -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-hourglass-split"></i> Epoch 進度
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Initial Tick: <span id="initial-tick-value">--</span></span>
+                                <span>Current Tick: <span id="current-tick-value">--</span></span>
+                            </div>
+                            <div class="progress mt-2">
+                                <div id="epoch-progress" class="progress-bar" role="progressbar" style="width: 0%">
+                                    <span id="progress-percentage">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-info">
+                            <small class="text-muted">
+                                <strong>說明:</strong> 顯示當前 Epoch 的進度，接近 100% 表示即將進入下一個 Epoch。
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 網路健康指標 -->
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-heart-pulse"></i> 網路健康指標
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="health-indicators">
+                            <div class="health-item">
+                                <span class="health-label">整體狀況:</span>
+                                <span id="health-overall" class="badge bg-secondary">--</span>
+                            </div>
+                            <div class="health-item">
+                                <span class="health-label">Tick 狀態:</span>
+                                <span id="health-tick" class="badge bg-secondary">--</span>
+                            </div>
+                            <div class="health-item">
+                                <span class="health-label">Epoch 狀態:</span>
+                                <span id="health-epoch" class="badge bg-secondary">--</span>
+                            </div>
+                            <div class="health-item">
+                                <span class="health-label">持續時間:</span>
+                                <span id="health-duration" class="badge bg-secondary">--</span>
+                            </div>
+                        </div>
+                        <div class="chart-info mt-3">
+                            <small class="text-muted">
+                                <strong>說明:</strong> 即時監控網路各項關鍵指標的健康狀況。
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最後更新時間 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center">
+                    <small class="text-muted">
+                        最後更新: <span id="last-update">--</span> | 
+                        自動更新: <span id="auto-update-status">啟用</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-4 py-3">
+        <div class="container-fluid">
+            <div class="text-center">
+                <small class="text-muted">
+                    &copy; MirrorRiver studio
+                </small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 載入中覆蓋層 -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">載入中...</span>
+        </div>
+        <div class="mt-2">正在載入 Qubic 網路數據...</div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- 配置文件 -->
+    <script src="config.js"></script>
+    
+    <!-- API 代理 -->
+    <script src="api-proxy.js"></script>
+    
+    <!-- 自定義 JavaScript -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

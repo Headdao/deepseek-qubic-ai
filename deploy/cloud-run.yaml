@@ -1,0 +1,48 @@
+# Google Cloud Run 部署設定
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: qdashboard
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "10"
+        autoscaling.knative.dev/minScale: "1"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/memory: "512Mi"
+        run.googleapis.com/cpu: "1000m"
+    spec:
+      containerConcurrency: 100
+      timeoutSeconds: 30
+      containers:
+      - image: gcr.io/PROJECT_ID/qdashboard:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PORT
+          value: "8000"
+        - name: PYTHONPATH
+          value: "/app"
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /api/status
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10

@@ -1,0 +1,523 @@
+/* QDashboard 自定義樣式 - 參考 Google Analytics 風格 */
+
+:root {
+    --primary-color: #4285f4;
+    --primary-dark: #1a73e8;
+    --primary-light: #7baaf7;
+    --success-color: #34a853;
+    --warning-color: #fbbc04;
+    --danger-color: #ea4335;
+    --info-color: #4285f4;
+    --light-color: #f8f9fa;
+    --dark-color: #202124;
+    --card-background: #ffffff;
+    --border-color: #e8eaed;
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --gradient-blue: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    --gradient-success: linear-gradient(135deg, #34a853 0%, #137333 100%);
+    --shadow-light: 0 1px 3px rgba(60,64,67,.3);
+    --shadow-medium: 0 4px 6px rgba(60,64,67,.15);
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Google Sans', 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+/* 度量卡片樣式 - 改善對比度 */
+.metric-card {
+    padding: 1.5rem;
+    background: var(--gradient-blue);
+    border-radius: 12px;
+    color: #ffffff !important; /* 強制白色文字 */
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(66, 133, 244, 0.2);
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #ffffff !important; /* 確保數值是白色 */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 添加文字陰影增強可讀性 */
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.95) !important; /* 確保標籤是白色 */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 添加文字陰影 */
+}
+
+/* 卡片樣式增強 - 現代化設計 */
+.card {
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card-background);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-medium);
+}
+
+.card-header {
+    background: var(--gradient-blue);
+    color: white;
+    border-bottom: none;
+    padding: 1.25rem;
+    font-weight: 500;
+}
+
+.card-title {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* 區段標題樣式 */
+.section-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* 統計卡片樣式 */
+.stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-change {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.125rem 0.5rem;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.stat-change.positive {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.stat-change.negative {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.stat-change.neutral {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+/* 供應量指標樣式 */
+.supply-metric {
+    padding: 1rem 0;
+}
+
+.supply-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.supply-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* 小數值格式化 */
+.small-value {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* 圖表區域 - 改進設計 */
+.chart-info {
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* 健康指標樣式 - 精緻化設計 */
+.health-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.health-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.health-item:hover {
+    background-color: #e8f0fe;
+}
+
+.health-label {
+    font-weight: 500;
+}
+
+/* 進度條增強 - Google 風格 */
+.progress {
+    height: 1.5rem;
+    border-radius: 12px;
+    background-color: #e8eaed;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: var(--gradient-blue);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* 連接狀態指示器 */
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* 載入覆蓋層 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 9999;
+    font-size: 1.2rem;
+}
+
+.loading-overlay.hidden {
+    display: none;
+}
+
+/* 狀態徽章顏色 - 統一風格 */
+.badge.bg-healthy,
+.badge.bg-success {
+    background-color: var(--success-color) !important;
+    color: white !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger-color) !important;
+    color: white !important;
+}
+
+.badge.bg-offline,
+.badge.bg-secondary {
+    background-color: #5f6368 !important;
+    color: white !important;
+}
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    .metric-label {
+        font-size: 0.75rem;
+    }
+    
+    .health-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .health-label {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .metric-card {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* 動畫效果 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* 圖表容器 */
+canvas {
+    max-height: 200px !important;
+}
+
+/* Footer 樣式 */
+.footer {
+    background-color: transparent;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.footer small {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* 改進的動畫效果 */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.metric-card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+/* 載入動畫 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-border {
+    animation: spin 1s linear infinite;
+}
+
+/* 數據更新閃爍效果 */
+@keyframes flash {
+    0% { background-color: rgba(66, 133, 244, 0.1); }
+    50% { background-color: rgba(66, 133, 244, 0.3); }
+    100% { background-color: rgba(66, 133, 244, 0.1); }
+}
+
+.data-updated {
+    animation: flash 0.5s ease-in-out;
+}
+
+/* 改進的按鈕樣式 */
+.btn-primary {
+    background: var(--gradient-blue);
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+/* 深色模式支持 - 優化版 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-background: #1f1f23;
+        --border-color: #3c4043;
+        --text-primary: #e8eaed;
+        --text-secondary: #9aa0a6;
+        --background-dark: #202124;
+        --surface-dark: #303134;
+    }
+    
+    body {
+        background-color: var(--background-dark) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .card {
+        background-color: var(--card-background) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .card-body {
+        background-color: var(--card-background) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .chart-info {
+        background-color: var(--surface-dark) !important;
+        color: var(--text-secondary) !important;
+        border-left-color: var(--primary-color) !important;
+    }
+    
+    .health-item {
+        background-color: var(--surface-dark) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .health-item:hover {
+        background-color: #3c4043 !important;
+    }
+    
+    /* 導航欄在暗黑模式下保持原色 */
+    .navbar {
+        background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%) !important;
+    }
+    
+    /* 度量卡片在暗黑模式下保持鮮明 */
+    .metric-card {
+        background: var(--gradient-blue) !important;
+        border-color: var(--primary-color) !important;
+    }
+    
+    /* 進度條背景調整 */
+    .progress {
+        background-color: var(--surface-dark) !important;
+    }
+    
+    /* 文字顏色強制覆蓋 */
+    .text-muted {
+        color: var(--text-secondary) !important;
+    }
+    
+    /* 小標題顏色 */
+    .metric-label {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    /* 圖表容器背景 */
+    canvas {
+        background-color: transparent !important;
+    }
+    
+    /* Footer 在暗黑模式下的樣式 */
+    .footer {
+        border-top-color: var(--border-color) !important;
+    }
+    
+    .footer small {
+        color: var(--text-secondary) !important;
+    }
+    
+    /* 暗黑模式下的統計卡片 */
+    .stat-card {
+        background-color: var(--card-background) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    .stat-card:hover {
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.25) !important;
+    }
+    
+    .stat-value {
+        color: var(--text-primary) !important;
+    }
+    
+    .stat-label {
+        color: var(--text-secondary) !important;
+    }
+    
+    .section-title {
+        color: var(--primary-color) !important;
+        border-bottom-color: var(--primary-color) !important;
+    }
+    
+    .supply-value {
+        color: var(--primary-color) !important;
+    }
+    
+    .supply-label {
+        color: var(--text-secondary) !important;
+    }
+}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端 AI 組件測試</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #1e1e1e; 
+            color: #e8eaed; 
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #444; 
+            border-radius: 8px; 
+            background: #2d2d2d;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button { 
+            background: #4285f4; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin: 5px;
+        }
+        button:hover { background: #1a73e8; }
+        .log { 
+            background: #1e1e1e; 
+            border: 1px solid #444; 
+            padding: 10px; 
+            font-family: monospace; 
+            font-size: 12px; 
+            height: 200px; 
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Qubic AI 前端組件測試頁面</h1>
+    
+    <div class="test-section">
+        <h2>🔌 API 連接測試</h2>
+        <button onclick="testAPIConnection()">測試 API 連接</button>
+        <button onclick="testAIEndpoints()">測試 AI 端點</button>
+        <div id="api-status" class="log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🤖 AI 組件測試</h2>
+        <button onclick="loadAIComponents()">載入 AI 組件</button>
+        <button onclick="testAIAnalysis()">測試 AI 分析</button>
+        <button onclick="testAIQuery()">測試 AI 問答</button>
+        <div id="ai-status" class="log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔧 開發者控制台測試</h2>
+        <button onclick="loadDevConsole()">載入開發者控制台</button>
+        <button onclick="toggleDevConsole()">切換控制台 (F12)</button>
+        <button onclick="testConsoleLogging()">測試日誌記錄</button>
+        <div id="console-status" class="log"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        function log(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#e8eaed';
+            container.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function testAPIConnection() {
+            log('api-status', '開始測試 API 連接...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                if (response.ok) {
+                    const data = await response.json();
+                    log('api-status', `✅ API 連接成功: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    log('api-status', `❌ API 連接失敗: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log('api-status', `❌ API 連接錯誤: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testAIEndpoints() {
+            log('api-status', '測試 AI 端點...', 'info');
+            
+            const endpoints = ['/ai/status', '/ai/health'];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`${API_BASE}${endpoint}`);
+                    if (response.ok) {
+                        log('api-status', `✅ ${endpoint} 可用`, 'success');
+                    } else {
+                        log('api-status', `⚠️ ${endpoint} 狀態碼: ${response.status}`, 'warning');
+                    }
+                } catch (error) {
+                    log('api-status', `❌ ${endpoint} 錯誤: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        function loadAIComponents() {
+            log('ai-status', '載入 AI 組件腳本...', 'info');
+            
+            // 載入 AI 組件 CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = '/css/ai-components.css';
+            document.head.appendChild(cssLink);
+            
+            // 載入 AI 組件 JavaScript
+            const script = document.createElement('script');
+            script.src = '/js/ai-components.js';
+            script.onload = () => {
+                log('ai-status', '✅ AI 組件腳本載入成功', 'success');
+                
+                // 初始化 AI 組件
+                try {
+                    window.testAI = new QubicAIComponents();
+                    log('ai-status', '✅ AI 組件初始化成功', 'success');
+                } catch (error) {
+                    log('ai-status', `❌ AI 組件初始化失敗: ${error.message}`, 'error');
+                }
+            };
+            script.onerror = () => {
+                log('ai-status', '❌ AI 組件腳本載入失敗', 'error');
+            };
+            document.head.appendChild(script);
+        }
+        
+        async function testAIAnalysis() {
+            if (!window.testAI) {
+                log('ai-status', '❌ 請先載入 AI 組件', 'error');
+                return;
+            }
+            
+            log('ai-status', '測試 AI 分析功能...', 'info');
+            
+            try {
+                const testData = {
+                    tick: 15234567,
+                    epoch: 134,
+                    duration: 1.2,
+                    health: { overall: '健康' }
+                };
+                
+                const analysis = await window.testAI.callAIAnalysis(testData);
+                log('ai-status', `✅ AI 分析成功: ${JSON.stringify(analysis, null, 2)}`, 'success');
+            } catch (error) {
+                log('ai-status', `❌ AI 分析失敗: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testAIQuery() {
+            if (!window.testAI) {
+                log('ai-status', '❌ 請先載入 AI 組件', 'error');
+                return;
+            }
+            
+            log('ai-status', '測試 AI 問答功能...', 'info');
+            
+            try {
+                const response = await window.testAI.callQAAPI('測試問題：當前網路狀況如何？');
+                log('ai-status', `✅ AI 問答成功: ${JSON.stringify(response, null, 2)}`, 'success');
+            } catch (error) {
+                log('ai-status', `❌ AI 問答失敗: ${error.message}`, 'error');
+            }
+        }
+        
+        function loadDevConsole() {
+            log('console-status', '載入開發者控制台...', 'info');
+            
+            // 載入控制台 CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = '/css/dev-console.css';
+            document.head.appendChild(cssLink);
+            
+            // 載入控制台 JavaScript
+            const script = document.createElement('script');
+            script.src = '/js/dev-console.js';
+            script.onload = () => {
+                log('console-status', '✅ 開發者控制台載入成功', 'success');
+                log('console-status', '按 F12 鍵可開啟/關閉控制台', 'info');
+            };
+            script.onerror = () => {
+                log('console-status', '❌ 開發者控制台載入失敗', 'error');
+            };
+            document.head.appendChild(script);
+        }
+        
+        function toggleDevConsole() {
+            if (window.qubicDevConsole) {
+                window.qubicDevConsole.toggleConsole();
+                log('console-status', '✅ 控制台狀態已切換', 'success');
+            } else {
+                log('console-status', '❌ 請先載入開發者控制台', 'error');
+            }
+        }
+        
+        function testConsoleLogging() {
+            if (window.qubicDevConsole) {
+                window.qubicDevConsole.log('INFO', 'test', '這是一個測試日誌條目');
+                window.qubicDevConsole.log('WARNING', 'test', '這是一個警告日誌');
+                window.qubicDevConsole.log('ERROR', 'test', '這是一個錯誤日誌');
+                log('console-status', '✅ 測試日誌已發送到控制台', 'success');
+            } else {
+                log('console-status', '❌ 請先載入開發者控制台', 'error');
+            }
+        }
+        
+        // 自動開始測試
+        window.addEventListener('load', () => {
+            log('api-status', '頁面載入完成，準備開始測試', 'info');
+            log('ai-status', '準備測試 AI 組件', 'info');
+            log('console-status', '準備測試開發者控制台', 'info');
+        });
+    </script>
+</body>
+</html>
+

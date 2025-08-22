@@ -1,0 +1,18 @@
+{
+  "completion_rate": 100.0,
+  "environment": true,
+  "dependencies": {
+    "torch": "2.8.0",
+    "transformers": "4.55.2",
+    "accelerate": "已安裝",
+    "bitsandbytes": "已安裝",
+    "huggingface_hub": "已安裝",
+    "flask": "已安裝",
+    "qubipy": "已安裝"
+  },
+  "models": {
+    "test_model": true,
+    "deepseek_model": true,
+    "model_size_gb": 3.310120311565697
+  }
+}

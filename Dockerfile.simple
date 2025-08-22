@@ -1,0 +1,28 @@
+# 簡化版 Dockerfile，不依賴 QubiPy Git
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 安裝系統依賴
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 複製並安裝基本依賴
+COPY requirements.basic.txt .
+RUN pip install --no-cache-dir -r requirements.basic.txt
+
+# 複製應用程式代碼
+COPY backend /app/backend
+COPY app.simple.py /app/app.py
+
+# 設置環境變數
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+ENV PORT=8080
+
+# 暴露端口
+EXPOSE 8080
+
+# 啟動應用
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app

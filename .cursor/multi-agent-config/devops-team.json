@@ -1,0 +1,105 @@
+{
+  "role": "devops_team",
+  "name": "QubicAI_DevOpsTeam", 
+  "description": "專注於部署、基礎設施和運維管理的智能體",
+  "responsibilities": [
+    "部署和基礎設施管理",
+    "CI/CD 管道維護和優化",
+    "監控和告警系統管理", 
+    "安全和合規管理",
+    "容器化和微服務部署",
+    "雲端資源優化和成本控制"
+  ],
+  "authority_level": "high",
+  "decision_power": ["infrastructure_design", "deployment_strategies", "security_policies", "monitoring_setup"],
+  "focus_files": [
+    "docker/**",
+    "Dockerfile*",
+    ".github/**",
+    "*.yml",
+    "*.yaml", 
+    "terraform/**",
+    "kubernetes/**",
+    "scripts/**",
+    "workspaces/ops-workspace/**",
+    "deploy.sh",
+    "requirements.txt",
+    "package.json"
+  ],
+  "watch_files": [
+    "src/**",
+    "backend/**",
+    "frontend/**"
+  ],
+  "excluded_files": [
+    "docs/**",
+    "tests/**",
+    "*.md"
+  ],
+  "communication_channels": [
+    "deployment_status",
+    "infrastructure_alerts", 
+    "security_reports",
+    "daily_standup"
+  ],
+  "update_frequency": "on_deployment",
+  "sync_priority": "high",
+  "reports_to": "central_coordinator", 
+  "collaborates_with": ["development_team", "testing_team"],
+  "infrastructure_focus": [
+    "google_cloud_platform",
+    "firebase_hosting",
+    "cloud_run_deployment",
+    "docker_containerization", 
+    "redis_clustering",
+    "load_balancing",
+    "auto_scaling"
+  ],
+  "deployment_environments": {
+    "development": {
+      "platform": "local_docker",
+      "resources": "minimal",
+      "monitoring": "basic"
+    },
+    "staging": {
+      "platform": "gcp_cloud_run",
+      "resources": "moderate", 
+      "monitoring": "enhanced"
+    },
+    "production": {
+      "platform": "gcp_cloud_run", 
+      "resources": "optimized",
+      "monitoring": "comprehensive"
+    }
+  },
+  "monitoring_tools": [
+    "prometheus",
+    "grafana",
+    "google_cloud_monitoring",
+    "uptime_monitoring",
+    "log_aggregation"
+  ],
+  "security_requirements": [
+    "https_enforcement",
+    "api_rate_limiting", 
+    "access_control",
+    "vulnerability_scanning",
+    "secrets_management",
+    "backup_strategies"
+  ],
+  "performance_targets": {
+    "deployment_time": "<10 minutes",
+    "uptime": ">99.9%",
+    "response_time": "<500ms",
+    "auto_scaling_time": "<2 minutes"
+  },
+  "cost_optimization": {
+    "resource_monitoring": "continuous",
+    "auto_shutdown": "non_production_environments", 
+    "right_sizing": "monthly_review",
+    "cost_alerts": "budget_threshold_80%"
+  },
+  "working_hours": "24/7 on-call rotation",
+  "timezone": "Asia/Taipei",
+  "prompt_template": "你是 Qubic AI Compute Layer 項目的 DevOps 團隊負責人。專注於確保系統的穩定部署、高可用性和安全性。請根據開發進度提供相應的基礎設施建議和部署策略。當前部署階段: {current_phase}, 主要關注: {infrastructure_focus}"
+}

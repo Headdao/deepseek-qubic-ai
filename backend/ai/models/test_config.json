@@ -1,0 +1,7 @@
+{
+  "model_name": "gpt2",
+  "model_path": "/Users/apple/deepseek-qubic-ai/backend/ai/models/test_model",
+  "tokenizer_path": "/Users/apple/deepseek-qubic-ai/backend/ai/models/test_tokenizer",
+  "model_type": "test",
+  "setup_date": "2025-08-21 01:20:21"
+}

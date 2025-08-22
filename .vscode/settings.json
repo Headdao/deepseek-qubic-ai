@@ -1,0 +1,18 @@
+{
+    "python.defaultInterpreterPath": "./venv/bin/python",
+    "python.analysis.extraPaths": [
+        "./venv/lib/python3.11/site-packages"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/venv": true,
+        "**/.pytest_cache": true
+    }
+}

@@ -1,0 +1,47 @@
+# Dockerfile 忽略文件
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.pytest_cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Frontend (不需要在後端 Docker 中)
+frontend/
+
+# Firebase
+.firebaserc
+firebase.json
+
+# 測試文件
+test_*.py
+*_test.py
+
+# 其他
+.gitignore
+README.md
+*.md

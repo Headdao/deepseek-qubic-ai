@@ -1,0 +1,209 @@
+{
+  "header": {
+    "title": "Qubic AI Dashboard",
+    "subtitle": "區塊鏈智能分析平台"
+  },
+  "navigation": {
+    "dashboard": "儀表板",
+    "analysis": "AI 分析",
+    "network": "網路監控",
+    "settings": "設定"
+  },
+  "ai": {
+    "analysis": {
+      "title": "AI 智能分析",
+      "subtitle": "基於 DeepSeek 的專業 Qubic 網路分析",
+      "analyze": "開始分析",
+      "analyzing": "分析中...",
+      "completed": "分析完成",
+      "error": "分析失敗",
+      "placeholder": "點擊上方按鈕開始 AI 分析...",
+      "results": {
+        "score": "分",
+        "scoreLabels": {
+          "excellent": "優秀",
+          "good": "良好", 
+          "normal": "正常",
+          "attention": "需關注",
+          "warning": "需警惕"
+        },
+        "sections": {
+          "summary": "分析摘要",
+          "insights": "關鍵洞察", 
+          "recommendations": "建議事項",
+          "analysisTime": "分析時間",
+          "duration": "耗時"
+        },
+        "fallback": {
+          "summaryText": "基於 Qubic 網路當前狀態的專業分析已完成",
+          "unavailable": "分析結果不可用",
+          "noInsights": "暫無洞察資訊",
+          "noRecommendations": "暫無建議",
+          "defaultInsights": [
+            "網路 Tick 數據已獲取並分析",
+            "AI 模型提供了詳細的專業評估", 
+            "分析涵蓋了當前網路狀態的關鍵指標",
+            "系統運行狀況良好，建議持續監控"
+          ],
+          "defaultRecommendations": [
+            "建議定期執行 AI 分析以監控網路健康",
+            "關注 Tick 變化趨勢和異常情況",
+            "保持對 Epoch 進度的密切觀察"
+          ]
+        }
+      }
+    },
+    "qa": {
+      "title": "AI 問答助手",
+      "subtitle": "詢問任何關於 Qubic 網路的問題",
+      "placeholder": "請輸入您的問題...",
+      "ask": "提問",
+      "asking": "思考中...",
+      "quickQuestions": "快速問題",
+      "hint": "詢問任何關於 Qubic 網路的問題",
+      "quickButtons": {
+        "networkStatus": "網路狀況",
+        "performance": "性能表現",
+        "epochProgress": "Epoch 進度"
+      },
+      "questions": {
+        "networkStatus": "分析當前網路狀況",
+        "performance": "評估網路健康",
+        "epochProgress": "預測 Epoch 進度"
+      }
+    },
+    "insights": {
+      "title": "智能洞察",
+      "recommendations": "建議",
+      "trends": "趨勢分析",
+      "alerts": "警示"
+    }
+  },
+  "network": {
+    "status": {
+      "title": "Qubic 網路狀態",
+      "tick": "當前 Tick",
+      "duration": "Tick 持續時間 (秒)",
+      "epoch": "當前 Epoch",
+      "health": "網路健康"
+    },
+    "epoch": {
+      "initialTick": "初始 Tick",
+      "currentTick": "當前 Tick"
+    },
+    "health": {
+      "excellent": "極佳",
+      "good": "良好", 
+      "normal": "正常",
+      "warning": "注意",
+      "critical": "嚴重",
+      "healthy": "健康",
+      "tickStatus": "Tick 狀態",
+      "epochStatus": "Epoch 狀態", 
+      "durationStatus": "持續時間狀態",
+      "overallStatus": "總體狀況"
+    },
+    "metrics": {
+      "title": "網路統計數據",
+      "activeAddresses": "活躍地址數",
+      "marketCap": "市值 (USD)",
+      "circulatingSupply": "流通供應量",
+      "burnedQus": "已燒毀 QUs",
+      "price": "QU 價格 (USD) - 9位精度",
+      "epochQuality": "Epoch 品質",
+      "supply": "供應量統計",
+      "priceTrend": "價格趨勢"
+    },
+    "technical": {
+      "title": "核心技術指標",
+      "tickTrend": "Tick 增長趨勢",
+      "durationChange": "Tick 持續時間變化",
+      "epochProgress": "Epoch 進度",
+      "healthMonitor": "網路健康監控",
+      "remainingTicks": "剩餘 Ticks",
+      "estimatedTime": "預估時間",
+      "completionPercentage": "完成百分比",
+      "initialTick": "Initial Tick",
+      "currentTick": "Current Tick", 
+      "tickDescription": "穩定上升表示網路正常運行，停滯或下降可能表示共識異常",
+      "durationDescription": "0-2秒為正常範圍，0秒極快，1秒快速，2秒正常，3秒以上需注意"
+    }
+  },
+  "devConsole": {
+    "title": "開發者控制台",
+    "tabs": {
+      "console": "控制台",
+      "network": "網路",
+      "sources": "來源", 
+      "performance": "效能",
+      "application": "應用程式"
+    },
+    "status": {
+      "connected": "已連線",
+      "offline": "離線",
+      "connecting": "連接中..."
+    },
+    "logs": {
+      "system": "系統",
+      "ai": "AI",
+      "api": "API",
+      "error": "錯誤"
+    }
+  },
+  "buttons": {
+    "analyze": "開始分析",
+    "startAnalysis": "開始分析",
+    "analyzing": "分析中...",
+    "ask": "提問",
+    "asking": "思考中...",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "refresh": "刷新",
+    "refreshing": "刷新中..."
+  },
+  "common": {
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "failed": "失敗",
+    "retry": "重試",
+    "cancel": "取消",
+    "confirm": "確認",
+    "close": "關閉",
+    "save": "儲存",
+    "edit": "編輯",
+    "delete": "刪除",
+    "copy": "複製",
+    "copied": "已複製",
+    "description": "說明",
+    "lastUpdate": "最後更新",
+    "copyright": "版權所有",
+    "time": {
+      "seconds": "秒",
+      "minutes": "分鐘",
+      "hours": "小時",
+      "days": "天"
+    },
+    "units": {
+      "qu": "QU",
+      "qus": "QUs"
+    }
+  },
+  "language": {
+    "switch": "語言",
+    "current": "中文",
+    "options": {
+      "zh-tw": "繁體中文",
+      "en": "English"
+    }
+  },
+  "dataConnection": {
+    "title": "真實數據已連接！",
+    "environment": "生產環境",
+    "environmentDesc": "使用雲端後端，顯示真實 Qubic 數據",
+    "source": "數據來源",
+    "sourceDesc": "直接連接 Qubic 官方 RPC API",
+    "frequency": "更新頻率",
+    "frequencyDesc": "每 15 秒自動刷新"
+  }
+}

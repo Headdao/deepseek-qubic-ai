@@ -1,0 +1,328 @@
+# 三 VM 雲端部署配置
+# 基於 deepseek-qubic-ai 專案的分散式架構
+
+version: "3.8"
+
+# ========================================
+# VM-1: Orchestrator (協調器)
+# ========================================
+orchestrator:
+  vm_config:
+    instance_type: "n1-standard-4"  # 4 vCPU, 15GB RAM
+    os: "Ubuntu 20.04 LTS"
+    storage: "50GB SSD"
+    region: "asia-east1"  # 台灣/香港區域，低延遲
+    
+  services:
+    - name: "qubic-orchestrator"
+      port: 5000
+      replicas: 1
+      environment:
+        - ROLE=orchestrator
+        - COMPUTE_NODES=vm-2:5000,vm-3:5000
+        - HEALTH_CHECK_INTERVAL=30
+        - MAX_CONCURRENT_REQUESTS=20
+        
+    - name: "nginx-proxy"
+      port: 80
+      config: |
+        upstream orchestrator {
+            server localhost:5000;
+        }
+        server {
+            listen 80;
+            server_name your-domain.com;
+            location / {
+                proxy_pass http://orchestrator;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+        }
+
+# ========================================
+# VM-2: Compute Node A
+# ========================================
+compute_node_a:
+  vm_config:
+    instance_type: "n1-standard-4"
+    os: "Ubuntu 20.04 LTS"
+    storage: "50GB SSD"
+    region: "asia-east1"
+    
+  services:
+    - name: "deepseek-compute-a"
+      port: 5000
+      replicas: 1
+      environment:
+        - ROLE=compute
+        - NODE_ID=A
+        - MODEL_PATH=/app/models/DeepSeek-R1-Distill-Qwen-1.5B
+        - TORCH_DTYPE=float16
+        - DEVICE_MAP=auto
+        
+  model_config:
+    model_name: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+    download_method: "huggingface_hub"
+    cache_dir: "/app/models"
+    quantization: "int8"  # 節省記憶體
+    
+# ========================================
+# VM-3: Compute Node B
+# ========================================
+compute_node_b:
+  vm_config:
+    instance_type: "n1-standard-4"
+    os: "Ubuntu 20.04 LTS"
+    storage: "50GB SSD"
+    region: "asia-east1"
+    
+  services:
+    - name: "deepseek-compute-b"
+      port: 5000
+      replicas: 1
+      environment:
+        - ROLE=compute
+        - NODE_ID=B
+        - MODEL_PATH=/app/models/DeepSeek-R1-Distill-Qwen-1.5B
+        - TORCH_DTYPE=float16
+        - DEVICE_MAP=auto
+        
+  model_config:
+    model_name: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+    download_method: "huggingface_hub"
+    cache_dir: "/app/models"
+    quantization: "int8"
+
+# ========================================
+# 網路配置
+# ========================================
+networking:
+  vpc_name: "qubic-ai-vpc"
+  subnet_cidr: "10.0.0.0/24"
+  
+  firewall_rules:
+    - name: "allow-internal"
+      source_ranges: ["10.0.0.0/24"]
+      allowed_ports: ["5000", "6379", "22"]
+      
+    - name: "allow-external-api"
+      source_ranges: ["0.0.0.0/0"]
+      allowed_ports: ["80", "443"]
+      
+  load_balancer:
+    type: "application"
+    target: "vm-1:80"
+    health_check: "/api/health"
+    
+# ========================================
+# 安全配置
+# ========================================
+security:
+  ssl_cert: "letsencrypt"  # 自動 SSL 憑證
+  
+  ssh_keys:
+    - name: "deployment-key"
+      public_key: "ssh-rsa AAAAB3NzaC1yc2E..."  # 部署金鑰
+      
+  api_security:
+    rate_limiting: "100/minute"
+    cors_origins: ["https://your-domain.com"]
+    api_key_required: false  # 內部 API，暫不需要
+    
+# ========================================
+# 監控配置
+# ========================================
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+    retention: "15d"
+    
+  grafana:
+    enabled: true
+    port: 3000
+    admin_password: "auto_generated"
+    
+  alerts:
+    - name: "high-cpu"
+      condition: "cpu > 90%"
+      duration: "5m"
+      action: "email"
+      
+    - name: "memory-usage"
+      condition: "memory > 85%"
+      duration: "3m"
+      action: "slack"
+      
+    - name: "ai-inference-failure"
+      condition: "error_rate > 10%"
+      duration: "2m"
+      action: "email+slack"
+
+# ========================================
+# 部署腳本
+# ========================================
+deployment:
+  scripts:
+    setup: |
+      #!/bin/bash
+      # 基礎環境設置
+      sudo apt update && sudo apt upgrade -y
+      sudo apt install -y python3.9 python3-pip docker.io git curl
+      
+      # Docker 設置
+      sudo systemctl start docker
+      sudo systemctl enable docker
+      sudo usermod -aG docker $USER
+      
+      # Python 環境
+      pip3 install --upgrade pip
+      pip3 install torch transformers accelerate flask requests redis
+      
+      # 下載專案
+      git clone https://github.com/your-org/deepseek-qubic-ai.git
+      cd deepseek-qubic-ai
+      
+    deploy_orchestrator: |
+      #!/bin/bash
+      # VM-1: 部署協調器
+      cd /app/deepseek-qubic-ai
+      cp cloud_qubic_app.py orchestrator.py
+      
+      # 修改配置為協調器模式
+      sed -i 's/CloudAIIntegration()/CloudAIIntegration(mode="orchestrator")/' orchestrator.py
+      
+      # 啟動服務
+      nohup python3 orchestrator.py > orchestrator.log 2>&1 &
+      
+    deploy_compute: |
+      #!/bin/bash
+      # VM-2 & VM-3: 部署計算節點
+      cd /app/deepseek-qubic-ai
+      
+      # 下載 DeepSeek 模型
+      python3 -c "
+      from huggingface_hub import snapshot_download
+      snapshot_download(
+          'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
+          cache_dir='/app/models',
+          resume_download=True
+      )"
+      
+      # 啟動計算節點
+      python3 scripts/compute_node.py
+      
+# ========================================
+# 成本評估
+# ========================================
+cost_estimation:
+  monthly_costs:
+    vm_instances:
+      orchestrator: "$120 (n1-standard-4)"
+      compute_a: "$120 (n1-standard-4)"
+      compute_b: "$120 (n1-standard-4)"
+      total: "$360"
+      
+    storage:
+      ssd_storage: "$30 (150GB total)"
+      model_storage: "$15 (persistent)"
+      backup: "$10 (automated)"
+      total: "$55"
+      
+    network:
+      load_balancer: "$18"
+      egress_traffic: "$25 (estimated)"
+      cdn: "$20 (optional)"
+      total: "$63"
+      
+    monitoring:
+      cloud_monitoring: "$15"
+      logging: "$10"
+      total: "$25"
+      
+  total_monthly: "$503"
+  
+  performance_sla:
+    availability: "99.9%"
+    inference_time: "< 10 seconds"
+    concurrent_users: "10-20"
+    throughput: "30 queries/minute"
+
+# ========================================
+# 備份與災難恢復
+# ========================================
+backup:
+  automated_snapshots:
+    frequency: "daily"
+    retention: "30 days"
+    
+  model_backup:
+    location: "google_cloud_storage"
+    frequency: "weekly"
+    encryption: "customer_managed"
+    
+  database_backup:
+    type: "redis_dump"
+    frequency: "hourly"
+    compression: "gzip"
+    
+  disaster_recovery:
+    rpo: "1 hour"  # 恢復點目標
+    rto: "30 minutes"  # 恢復時間目標
+    failover: "automatic"
+
+# ========================================
+# 部署驗證
+# ========================================
+validation:
+  health_checks:
+    - endpoint: "http://vm-1/api/health"
+      expected_status: 200
+      timeout: 5s
+      
+    - endpoint: "http://vm-2:5000/health"
+      expected_status: 200
+      timeout: 5s
+      
+    - endpoint: "http://vm-3:5000/health"
+      expected_status: 200
+      timeout: 5s
+      
+  performance_tests:
+    - name: "ai_inference_test"
+      query: "什麼是 Qubic 網路？"
+      expected_response_time: "< 10s"
+      
+    - name: "load_test"
+      concurrent_requests: 10
+      duration: "5m"
+      success_rate: "> 95%"
+      
+  integration_tests:
+    - name: "end_to_end_test"
+      steps:
+        - "訪問 QDashboard"
+        - "點擊 AI 分析"
+        - "驗證回應品質"
+        - "檢查語言切換"
+        
+# ========================================
+# 維護計劃
+# ========================================
+maintenance:
+  scheduled_updates:
+    frequency: "weekly"
+    window: "Sunday 02:00-04:00 UTC+8"
+    auto_rollback: true
+    
+  model_updates:
+    frequency: "monthly"
+    testing_required: true
+    approval_process: "manual"
+    
+  security_patches:
+    frequency: "as_needed"
+    auto_apply: "critical_only"
+    notification: "immediate"
+
+

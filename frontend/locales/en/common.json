@@ -1,0 +1,209 @@
+{
+  "header": {
+    "title": "Qubic AI Dashboard",
+    "subtitle": "Blockchain Intelligence Analytics Platform"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "analysis": "AI Analysis",
+    "network": "Network Monitor",
+    "settings": "Settings"
+  },
+  "ai": {
+    "analysis": {
+      "title": "AI Analysis",
+      "subtitle": "Professional Qubic network analysis powered by DeepSeek",
+      "analyze": "Start Analysis",
+      "analyzing": "Analyzing...",
+      "completed": "Analysis Complete",
+      "error": "Analysis Failed",
+      "placeholder": "Click the button above to start AI analysis...",
+      "results": {
+        "score": "pts",
+        "scoreLabels": {
+          "excellent": "Excellent",
+          "good": "Good",
+          "normal": "Normal", 
+          "attention": "Needs Attention",
+          "warning": "Warning"
+        },
+        "sections": {
+          "summary": "Analysis Summary",
+          "insights": "Key Insights",
+          "recommendations": "Recommendations", 
+          "analysisTime": "Analysis Time",
+          "duration": "Duration"
+        },
+        "fallback": {
+          "summaryText": "Professional analysis of current Qubic network state completed",
+          "unavailable": "Analysis results unavailable",
+          "noInsights": "No insights available",
+          "noRecommendations": "No recommendations available",
+          "defaultInsights": [
+            "Network Tick data has been retrieved and analyzed",
+            "AI model provided detailed professional assessment",
+            "Analysis covers key indicators of current network state", 
+            "System running well, continuous monitoring recommended"
+          ],
+          "defaultRecommendations": [
+            "Recommend regular AI analysis to monitor network health",
+            "Monitor Tick change trends and anomalous situations",
+            "Maintain close observation of Epoch progress"
+          ]
+        }
+      }
+    },
+    "qa": {
+      "title": "AI Assistant",
+      "subtitle": "Ask anything about the Qubic network",
+      "placeholder": "Enter your question...",
+      "ask": "Ask",
+      "asking": "Thinking...",
+      "quickQuestions": "Quick Questions",
+      "hint": "Ask anything about the Qubic network",
+      "quickButtons": {
+        "networkStatus": "Network Status",
+        "performance": "Performance",
+        "epochProgress": "Epoch Progress"
+      },
+      "questions": {
+        "networkStatus": "How is the current network status?",
+        "performance": "Evaluate network health",
+        "epochProgress": "Predict Epoch progress"
+      }
+    },
+    "insights": {
+      "title": "Smart Insights",
+      "recommendations": "Recommendations",
+      "trends": "Trend Analysis",
+      "alerts": "Alerts"
+    }
+  },
+  "network": {
+    "status": {
+      "title": "Qubic Network Status",
+      "tick": "Current Tick",
+      "duration": "Tick Duration (seconds)",
+      "epoch": "Current Epoch",
+      "health": "Network Health"
+    },
+    "epoch": {
+      "initialTick": "Initial Tick",
+      "currentTick": "Current Tick"
+    },
+    "health": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "normal": "Normal", 
+      "warning": "Warning",
+      "critical": "Critical",
+      "healthy": "Healthy",
+      "tickStatus": "Tick Status",
+      "epochStatus": "Epoch Status",
+      "durationStatus": "Duration Status", 
+      "overallStatus": "Overall Status"
+    },
+    "metrics": {
+      "title": "Network Statistics",
+      "activeAddresses": "Active Addresses",
+      "marketCap": "Market Cap (USD)",
+      "circulatingSupply": "Circulating Supply",
+      "burnedQus": "Burned QUs",
+      "price": "QU Price (USD) - 9 decimals",
+      "epochQuality": "Epoch Quality",
+      "supply": "Supply Statistics",
+      "priceTrend": "Price Trend"
+    },
+    "technical": {
+      "title": "Core Technical Indicators",
+      "tickTrend": "Tick Growth Trend",
+      "durationChange": "Tick Duration Changes",
+      "epochProgress": "Epoch Progress",
+      "healthMonitor": "Network Health Monitor",
+      "remainingTicks": "Remaining Ticks",
+      "estimatedTime": "Estimated Time",
+      "completionPercentage": "Completion %",
+      "initialTick": "Initial Tick",
+      "currentTick": "Current Tick",
+      "tickDescription": "Steady growth indicates normal network operation, stagnation or decline may indicate consensus issues",
+      "durationDescription": "0-2 seconds is normal range, 0s very fast, 1s fast, 2s normal, 3s+ needs attention"
+    }
+  },
+  "devConsole": {
+    "title": "Developer Console",
+    "tabs": {
+      "console": "Console",
+      "network": "Network",
+      "sources": "Sources",
+      "performance": "Performance", 
+      "application": "Application"
+    },
+    "status": {
+      "connected": "Connected",
+      "offline": "Offline",
+      "connecting": "Connecting..."
+    },
+    "logs": {
+      "system": "System",
+      "ai": "AI",
+      "api": "API",
+      "error": "Error"
+    }
+  },
+  "buttons": {
+    "analyze": "Start Analysis",
+    "startAnalysis": "Start Analysis",
+    "analyzing": "Analyzing...",
+    "ask": "Ask",
+    "asking": "Thinking...",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "failed": "Failed",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm", 
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copy": "Copy",
+    "copied": "Copied",
+    "description": "Description",
+    "lastUpdate": "Last Update",
+    "copyright": "Copyright",
+    "time": {
+      "seconds": "seconds",
+      "minutes": "minutes", 
+      "hours": "hours",
+      "days": "days"
+    },
+    "units": {
+      "qu": "QU",
+      "qus": "QUs"
+    }
+  },
+  "language": {
+    "switch": "Language",
+    "current": "EN",
+    "options": {
+      "zh-tw": "繁體中文",
+      "en": "English"
+    }
+  },
+  "dataConnection": {
+    "title": "Real Data Connected!",
+    "environment": "Production Environment",
+    "environmentDesc": "Using cloud backend, displaying real Qubic data",
+    "source": "Data Source",
+    "sourceDesc": "Direct connection to Qubic official RPC API",
+    "frequency": "Update Frequency",
+    "frequencyDesc": "Auto refresh every 15 seconds"
+  }
+}

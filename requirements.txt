@@ -1,0 +1,37 @@
+Flask>=3.0,<3.2
+Flask-Cors==6.0.1
+requests>=2.31,<2.33
+
+# AI/ML stack
+transformers==4.55.2
+accelerate==1.10.0
+torch==2.8.0
+safetensors==0.6.2
+tokenizers==0.21.4
+huggingface_hub==0.34.4
+tqdm==4.67.1
+numpy==2.3.2
+scipy==1.16.1
+
+# Utilities
+psutil==7.0.0
+PyYAML==6.0.2
+regex==2025.7.34
+filelock>=3.0
+packaging>=23
+
+# Flask transitive dependencies (pinned to current working versions)
+click==8.2.1
+Jinja2==3.1.6
+itsdangerous==2.2.0
+Werkzeug==3.1.3
+blinker==1.9.0
+
+# Qubic client
+qubipy==0.4.0
+# QDashboard Dependencies (consolidated, avoid duplicates)
+# keep lower bounds flexible to resolve conflicts
+gunicorn>=21.2.0
+
+# QubiPy (installed via: pip install -e /path/to/QubiPy-main)
+# QubiPy==0.4.0
